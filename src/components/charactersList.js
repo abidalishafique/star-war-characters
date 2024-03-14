@@ -6,7 +6,6 @@ import PaginationComponent from './pagination';
 import './commonStyles.css';
 import { getCharactersList } from '../api/getCharactersList';
 import { getRandomColor } from '../utils/getRandomColor';
-import Auth from '../authentication/auth';
 
 const pageSize = 10;
 
