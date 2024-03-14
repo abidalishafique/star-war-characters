@@ -1,11 +1,11 @@
 import './App.css';
-import StarWarCharacterList from './components/charactersList';
+import RoutesComponent from './routes/routes';
 
 
 function App() {
   return (
     <div className="App">
-      <StarWarCharacterList />
+      <RoutesComponent />
     </div>
   );
 }

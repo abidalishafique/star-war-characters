@@ -6,10 +6,11 @@ import PaginationComponent from './pagination';
 import './commonStyles.css';
 import { getCharactersList } from '../api/getCharactersList';
 import { getRandomColor } from '../utils/getRandomColor';
+import Auth from '../authentication/auth';
 
 const pageSize = 10;
 
-export default function StarWarCharacterList() {
+function StarWarCharacterList() {
     const [page, setPage] = useState(1);
     const [renderedCharactersList, setRenderedCharactersList] = useState([]);
     const [totalNoOfPages, setTotalNoOfPages] = useState(1);
@@ -34,6 +35,7 @@ export default function StarWarCharacterList() {
             setSpecicesToColorMapping({...tempMapping});
         } catch (err) {
             console.log(err);
+            alert('Unable to fetch the records of star war characters!');
         } finally {
             setLoading(false);
         }
@@ -65,7 +67,7 @@ export default function StarWarCharacterList() {
             {renderedCharactersList.map((character) => {
                 return (
                     <Grid item xs={2}>
-                        <CharacterCard characterDetails={character} specicesToColorMapping={specicesToColorMapping} />
+                        <CharacterCard key={character?.url} characterDetails={character} specicesToColorMapping={specicesToColorMapping} />
                     </Grid>
                 );
             })}
@@ -76,3 +78,5 @@ export default function StarWarCharacterList() {
         </>
   );
 }
+
+export default StarWarCharacterList;

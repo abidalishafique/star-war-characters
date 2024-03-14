@@ -17,3 +17,8 @@
 .addTransition:hover {
     box-shadow: 20px 20px 40px 0px rgba(0,0,0,0.5);
 }
+
+.Login {
+    display: flex;
+    flex-direction: column;
+}
