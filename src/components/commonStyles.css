@@ -3,3 +3,17 @@
     justify-content: right;
     margin-top: 1rem;
 }
+
+.alignLoader {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+}
+
+.addTransition {
+    transition: height 0.3s, box-shadow 0.3s;
+}
+
+.addTransition:hover {
+    box-shadow: 20px 20px 40px 0px rgba(0,0,0,0.5);
+}

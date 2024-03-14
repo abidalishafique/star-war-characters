@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const getCharactersList  = () => {
-    const apiUrl = 'https://swapi.dev/api/people';
+export const getCharactersList  = (page) => {
+    const apiUrl = `https://swapi.dev/api/people/?page=${page}`;
     return axios.get(apiUrl);
 }

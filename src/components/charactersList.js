@@ -1,43 +1,77 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
+import CircularProgress from '@mui/material/CircularProgress';
 import CharacterCard from './characterCard';
 import PaginationComponent from './pagination';
 import './commonStyles.css';
 import { getCharactersList } from '../api/getCharactersList';
+import { getRandomColor } from '../utils/getRandomColor';
 
-
-const list = [1,2,3,4,5,6]
+const pageSize = 10;
 
 export default function StarWarCharacterList() {
     const [page, setPage] = useState(1);
-    const totalNoOfPages = 15;
+    const [renderedCharactersList, setRenderedCharactersList] = useState([]);
+    const [totalNoOfPages, setTotalNoOfPages] = useState(1);
+    const [specicesToColorMapping, setSpecicesToColorMapping] = useState({});
+    const [loading, setLoading] = useState(false);
 
-    const getCharacters = async() => {
+    const getCharacters = async(pageNo) => {
         try {
-            const response = await getCharactersList();
-            console.log(response);
+            setLoading(true);
+            const response = await getCharactersList(pageNo);
+            const totalCount = response?.data?.count;
+            setTotalNoOfPages(Math.ceil(totalCount / pageSize));
+            setRenderedCharactersList(response.data.results);
+            const tempMapping = {...specicesToColorMapping};
+            for(const character of response.data.results) {
+                if (character?.species?.length) {
+                    if(!tempMapping[character.species[0]]) {
+                        tempMapping[character.species[0]] = getRandomColor();
+                    }
+                }
+            }
+            setSpecicesToColorMapping({...tempMapping});
         } catch (err) {
             console.log(err);
+        } finally {
+            setLoading(false);
         }
+    }
+    const onPageChange = (updatedPage) => {
+        setPage(updatedPage);
     }
 
     useEffect(() => {
-        getCharacters()
-    }, [])
+        getCharacters(page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page])
 
-  return (
+    if(loading) {
+        return (
+            <div className='alignLoader'>
+                <CircularProgress
+                    color="secondary"
+                    fourColor={false}
+                    variant="indeterminate"
+                />
+            </div>
+        );  
+    }
+ 
+    return (
         <>
             <Grid container spacing={1}>
-            {list.map(() => {
+            {renderedCharactersList.map((character) => {
                 return (
-                    <Grid item xs={4}>
-                        <CharacterCard />
+                    <Grid item xs={2}>
+                        <CharacterCard characterDetails={character} specicesToColorMapping={specicesToColorMapping} />
                     </Grid>
                 );
             })}
             </Grid>
             <div className='paginationContainer'>
-                <PaginationComponent page={page} setPage={setPage} totalNoOfPages={totalNoOfPages} />
+                <PaginationComponent page={page} setPage={onPageChange} totalNoOfPages={totalNoOfPages} />
             </div>
         </>
   );
